@@ -1,0 +1,14 @@
+server:
+  port: ":8080"
+  mode: "debug" # or release
+
+services:
+  user_service: "http://localhost:8081"
+  product_service: "http://localhost:8082"
+  order_service: "http://localhost:8083"
+  payment_service: "http://localhost:8084"
+  inventory_service: "http://localhost:8085"
+  notification_service: "http://localhost:8086"
+
+logger:
+  level: "info"

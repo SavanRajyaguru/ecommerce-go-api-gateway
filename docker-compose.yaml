@@ -1,0 +1,197 @@
+version: '3.8'
+
+services:
+  # User Service
+  user-service:
+    build:
+      context: ..
+      dockerfile: ecommerce-go-user-service/Dockerfile
+    container_name: user-service
+    ports:
+      - "8081:8080"
+    environment:
+      - SERVER_PORT=:8080
+      - GIN_MODE=debug
+    networks:
+      - ecommerce-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Product Service
+  product-service:
+    build:
+      context: ..
+      dockerfile: ecommerce-go-product-service/Dockerfile
+    container_name: product-service
+    ports:
+      - "8082:8080"
+    environment:
+      - SERVER_PORT=:8080
+      - GIN_MODE=debug
+    networks:
+      - ecommerce-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Order Service
+  order-service:
+    build:
+      context: ..
+      dockerfile: ecommerce-go-order-service/Dockerfile
+    container_name: order-service
+    ports:
+      - "8083:8080"
+    environment:
+      - SERVER_PORT=:8080
+      - GIN_MODE=debug
+    networks:
+      - ecommerce-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Payment Service
+  payment-service:
+    build:
+      context: ..
+      dockerfile: ecommerce-go-payment-service/Dockerfile
+    container_name: payment-service
+    ports:
+      - "8084:8080"
+    environment:
+      - SERVER_PORT=:8080
+      - GIN_MODE=debug
+    networks:
+      - ecommerce-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Inventory Service
+  inventory-service:
+    build:
+      context: ..
+      dockerfile: ecommerce-go-inventory-service/Dockerfile
+    container_name: inventory-service
+    ports:
+      - "8085:8080"
+    environment:
+      - SERVER_PORT=:8080
+      - GIN_MODE=debug
+    networks:
+      - ecommerce-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Notification Service
+  notification-service:
+    build:
+      context: ..
+      dockerfile: ecommerce-go-notification-service/Dockerfile
+    container_name: notification-service
+    ports:
+      - "8086:8080"
+    environment:
+      - SERVER_PORT=:8080
+      - GIN_MODE=debug
+    networks:
+      - ecommerce-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Config Service
+  config-service:
+    build:
+      context: ..
+      dockerfile: ecommerce-go-config-service/Dockerfile
+    container_name: config-service
+    ports:
+      - "8087:8080"
+    environment:
+      - SERVER_PORT=:8080
+      - GIN_MODE=debug
+    networks:
+      - ecommerce-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # API Gateway
+  api-gateway:
+    build:
+      context: ..
+      dockerfile: ecommerce-go-api-gateway/Dockerfile
+    container_name: api-gateway
+    ports:
+      - "8080:8080"
+    environment:
+      - SERVER_PORT=:8080
+      - SERVER_MODE=debug
+      - SERVICES_USER_SERVICE=http://user-service:8080
+      - SERVICES_PRODUCT_SERVICE=http://product-service:8080
+      - SERVICES_ORDER_SERVICE=http://order-service:8080
+      - SERVICES_PAYMENT_SERVICE=http://payment-service:8080
+      - SERVICES_INVENTORY_SERVICE=http://inventory-service:8080
+      - SERVICES_NOTIFICATION_SERVICE=http://notification-service:8080
+      - SERVICES_CONFIG_SERVICE=http://config-service:8080
+      - LOGGER_LEVEL=info
+    depends_on:
+      user-service:
+        condition: service_healthy
+      product-service:
+        condition: service_healthy
+      order-service:
+        condition: service_healthy
+      payment-service:
+        condition: service_healthy
+      inventory-service:
+        condition: service_healthy
+      notification-service:
+        condition: service_healthy
+      config-service:
+        condition: service_healthy
+    networks:
+      - ecommerce-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+networks:
+  ecommerce-network:
+    driver: bridge

@@ -9,6 +9,7 @@ services:
   payment_service: "http://localhost:8084"
   inventory_service: "http://localhost:8085"
   notification_service: "http://localhost:8086"
+  config_service: "http://localhost:8087"
 
 logger:
   level: "info"

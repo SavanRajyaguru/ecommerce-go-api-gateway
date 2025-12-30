@@ -4,8 +4,8 @@ services:
   # User Service - Development Mode
   user-service:
     build:
-      context: ../ecommerce-go-user-service
-      dockerfile: Dockerfile.dev
+      context: ..
+      dockerfile: ecommerce-go-user-service/Dockerfile.dev
     container_name: user-service-dev
     ports:
       - "8081:8080"
@@ -13,10 +13,9 @@ services:
       - SERVER_PORT=:8080
       - GIN_MODE=debug
     volumes:
-      # Mount source code for hot reload
-      - ../ecommerce-go-user-service:/app
-      # Cache go modules
-      - go-user-modules:/go/pkg/mod
+      # Mount parent directory so services can access siblings (for replace directives)
+      - ..:/workspace
+    working_dir: /workspace/ecommerce-go-user-service
     networks:
       - ecommerce-network
     restart: unless-stopped
@@ -24,8 +23,8 @@ services:
   # Product Service - Development Mode
   product-service:
     build:
-      context: ../ecommerce-go-product-service
-      dockerfile: Dockerfile.dev
+      context: ..
+      dockerfile: ecommerce-go-product-service/Dockerfile.dev
     container_name: product-service-dev
     ports:
       - "8082:8080"
@@ -33,8 +32,8 @@ services:
       - SERVER_PORT=:8080
       - GIN_MODE=debug
     volumes:
-      - ../ecommerce-go-product-service:/app
-      - go-product-modules:/go/pkg/mod
+      - ..:/workspace
+    working_dir: /workspace/ecommerce-go-product-service
     networks:
       - ecommerce-network
     restart: unless-stopped
@@ -42,8 +41,8 @@ services:
   # Order Service - Development Mode
   order-service:
     build:
-      context: ../ecommerce-go-order-service
-      dockerfile: Dockerfile.dev
+      context: ..
+      dockerfile: ecommerce-go-order-service/Dockerfile.dev
     container_name: order-service-dev
     ports:
       - "8083:8080"
@@ -51,8 +50,8 @@ services:
       - SERVER_PORT=:8080
       - GIN_MODE=debug
     volumes:
-      - ../ecommerce-go-order-service:/app
-      - go-order-modules:/go/pkg/mod
+      - ..:/workspace
+    working_dir: /workspace/ecommerce-go-order-service
     networks:
       - ecommerce-network
     restart: unless-stopped
@@ -60,8 +59,8 @@ services:
   # Payment Service - Development Mode
   payment-service:
     build:
-      context: ../ecommerce-go-payment-service
-      dockerfile: Dockerfile.dev
+      context: ..
+      dockerfile: ecommerce-go-payment-service/Dockerfile.dev
     container_name: payment-service-dev
     ports:
       - "8084:8080"
@@ -69,8 +68,8 @@ services:
       - SERVER_PORT=:8080
       - GIN_MODE=debug
     volumes:
-      - ../ecommerce-go-payment-service:/app
-      - go-payment-modules:/go/pkg/mod
+      - ..:/workspace
+    working_dir: /workspace/ecommerce-go-payment-service
     networks:
       - ecommerce-network
     restart: unless-stopped
@@ -78,8 +77,8 @@ services:
   # Inventory Service - Development Mode
   inventory-service:
     build:
-      context: ../ecommerce-go-inventory-service
-      dockerfile: Dockerfile.dev
+      context: ..
+      dockerfile: ecommerce-go-inventory-service/Dockerfile.dev
     container_name: inventory-service-dev
     ports:
       - "8085:8080"
@@ -87,8 +86,8 @@ services:
       - SERVER_PORT=:8080
       - GIN_MODE=debug
     volumes:
-      - ../ecommerce-go-inventory-service:/app
-      - go-inventory-modules:/go/pkg/mod
+      - ..:/workspace
+    working_dir: /workspace/ecommerce-go-inventory-service
     networks:
       - ecommerce-network
     restart: unless-stopped
@@ -96,8 +95,8 @@ services:
   # Notification Service - Development Mode
   notification-service:
     build:
-      context: ../ecommerce-go-notification-service
-      dockerfile: Dockerfile.dev
+      context: ..
+      dockerfile: ecommerce-go-notification-service/Dockerfile.dev
     container_name: notification-service-dev
     ports:
       - "8086:8080"
@@ -105,8 +104,8 @@ services:
       - SERVER_PORT=:8080
       - GIN_MODE=debug
     volumes:
-      - ../ecommerce-go-notification-service:/app
-      - go-notification-modules:/go/pkg/mod
+      - ..:/workspace
+    working_dir: /workspace/ecommerce-go-notification-service
     networks:
       - ecommerce-network
     restart: unless-stopped
@@ -114,8 +113,8 @@ services:
   # Config Service - Development Mode
   config-service:
     build:
-      context: ../ecommerce-go-config-service
-      dockerfile: Dockerfile.dev
+      context: ..
+      dockerfile: ecommerce-go-config-service/Dockerfile.dev
     container_name: config-service-dev
     ports:
       - "8087:8080"
@@ -123,8 +122,8 @@ services:
       - SERVER_PORT=:8080
       - GIN_MODE=debug
     volumes:
-      - ../ecommerce-go-config-service:/app
-      - go-config-modules:/go/pkg/mod
+      - ..:/workspace
+    working_dir: /workspace/ecommerce-go-config-service
     networks:
       - ecommerce-network
     restart: unless-stopped
@@ -132,8 +131,8 @@ services:
   # API Gateway - Development Mode
   api-gateway:
     build:
-      context: ../ecommerce-go-api-gateway
-      dockerfile: Dockerfile.dev
+      context: ..
+      dockerfile: ecommerce-go-api-gateway/Dockerfile.dev
     container_name: api-gateway-dev
     ports:
       - "8080:8080"
@@ -149,8 +148,8 @@ services:
       - SERVICES_CONFIG_SERVICE=http://config-service-dev:8080
       - LOGGER_LEVEL=info
     volumes:
-      - ../ecommerce-go-api-gateway:/app
-      - go-gateway-modules:/go/pkg/mod
+      - ..:/workspace
+    working_dir: /workspace/ecommerce-go-api-gateway
     depends_on:
       - user-service
       - product-service
@@ -166,13 +165,3 @@ services:
 networks:
   ecommerce-network:
     driver: bridge
-
-volumes:
-  go-user-modules:
-  go-product-modules:
-  go-order-modules:
-  go-payment-modules:
-  go-inventory-modules:
-  go-notification-modules:
-  go-config-modules:
-  go-gateway-modules:
